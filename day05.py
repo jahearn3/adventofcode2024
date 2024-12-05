@@ -37,10 +37,31 @@ for u, update in enumerate(updates):
                 rr.append(0)
     if sum(rr) == len(rr):
         mid = int((len(update) / 2) - 0.5)
-        # print(update, mid)
         ans += update[mid]
 
 print(ans)
 
 # Part 2
 
+ans = 0
+
+for u, update in enumerate(updates):
+    rr = []
+    for rule in rules:
+        a, b = rule
+        if a in update and b in update:
+            a_i = update.index(a)
+            b_i = update.index(b)
+            if a_i < b_i:
+                rr.append(1)
+            else:
+                rr.append(0)
+    if sum(rr) != len(rr):
+        # Re-order
+        
+
+        mid = int((len(update) / 2) - 0.5)
+        # print(update, mid)
+        ans += update[mid]
+
+print(ans)
