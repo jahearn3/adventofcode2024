@@ -8,7 +8,7 @@ f = os.path.basename(__file__)
 day = f[3:5]
 
 data = ld.load_data(f'example{day}.txt')
-# data = ld.load_data(f'input{day}.txt')
+data = ld.load_data(f'input{day}.txt')
 
 ans = 0
 
@@ -25,7 +25,7 @@ print(data[y][x])
 
 on_map = True
 visited = []
-limit = 999999999
+limit = 9999
 loops = 0
 
 while on_map:
@@ -85,15 +85,14 @@ print(ans)
 
 # Loop through all positions where there is a '.'
 # Simulate guard's path and see if a limit is reached
-# Stop if same pos with same dir is reached (need to include dir in visited) 
 
 
 def patrol(pos, grid):
     on_map = True
     visited = []
-    limit = 999999999
+    limit = 9999
     loops = 0
-    loop = False 
+    loop = False
 
     while on_map:
         visited.append(pos)
@@ -101,7 +100,7 @@ def patrol(pos, grid):
         loops += 1
         if loops >= limit:
             on_map = False
-            print(f'Limit {limit} reached')
+            loop = True
             break
         if dir == '^':
             if y-1 < 0:
@@ -136,11 +135,6 @@ def patrol(pos, grid):
                 else:
                     pos = [x-1, y, dir]
 
-        # This does not work, every location is considered on loop
-        if pos in visited:
-            loop = True
-            break
-
     return loop
 
 
@@ -160,6 +154,5 @@ for i, line in enumerate(data):
             loop = patrol(pos, grid)
             if loop:
                 ans += 1
-
 
 print(ans)
