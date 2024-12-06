@@ -3,6 +3,15 @@
 import load_data as ld
 import os
 
+
+def identify_unsafe_reports(levels):
+    safe = True
+    for i in range(1, len(levels)):
+        if (abs(levels[i] - levels[i-1]) > 3) or (levels[i] == levels[i-1]):
+            safe = False
+    return safe
+
+
 f = os.path.basename(__file__)
 day = f[3:5]
 
@@ -16,12 +25,10 @@ for line in data:
     levels = []
     for x in line_lst:
         levels.append(int(x))
-    safe = True
-    for i in range(1, len(levels)):
-        if (abs(levels[i] - levels[i-1]) > 3) or (levels[i] == levels[i-1]):
-            safe = False
+    safe = identify_unsafe_reports(levels)
 
-    if safe and (levels == sorted(levels) or levels[::-1] == sorted(levels[::-1])):
+    if safe and (levels == sorted(levels)
+                 or levels[::-1] == sorted(levels[::-1])):
         ans += 1
 
 print(ans)
@@ -34,23 +41,17 @@ for line in data:
     levels = []
     for x in line_lst:
         levels.append(int(x))
-    safe = True
-    for i in range(1, len(levels)):
-        if (abs(levels[i] - levels[i-1]) > 3) or (levels[i] == levels[i-1]):
-            safe = False
-    if safe and (levels == sorted(levels) or levels[::-1] == sorted(levels[::-1])):
+    safe = identify_unsafe_reports(levels)
+    if safe and (levels == sorted(levels)
+                 or levels[::-1] == sorted(levels[::-1])):
         ans += 1
     else:
-        counted = False
         for j in range(len(levels)):
-            levels_minus_one = levels[:j] + levels[j+1:]
-            safe = True
-            for k in range(1, len(levels_minus_one)):
-                if (abs(levels_minus_one[k] - levels_minus_one[k-1]) > 3) or (levels_minus_one[k] == levels_minus_one[k-1]):
-                    safe = False
-            if safe and (levels_minus_one == sorted(levels_minus_one) or levels_minus_one[::-1] == sorted(levels_minus_one[::-1])):
-                if not counted:
-                    ans += 1
-                    counted = True
+            levels_s = levels[:j] + levels[j+1:]
+            safe = identify_unsafe_reports(levels_s)
+            if safe and (levels_s == sorted(levels_s)
+                         or levels_s[::-1] == sorted(levels_s[::-1])):
+                ans += 1
+                break
 
 print(ans)
