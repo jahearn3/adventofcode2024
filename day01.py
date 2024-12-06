@@ -30,10 +30,7 @@ print(ans)
 ans = 0
 
 for i in range(len(a)):
-    c = 0
-    for j in range(len(b)):
-        if a[i] == b[j]:
-            c += 1
+    c = b.count(a[i])
     ans += a[i] * c
 
 print(ans)
