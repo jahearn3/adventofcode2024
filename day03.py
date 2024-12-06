@@ -22,44 +22,38 @@ def multiply(s):
 
 
 ans = 0
-data = 'xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))'
-ans = multiply(data)
-ans = 0
+data = ld.load_data(f'example{day}a.txt')
 data = ld.load_data(f'input{day}.txt')
 for line in data:
     ans += multiply(line)
 print(ans)
 
 
-# Part 2 
-def multiply3(s, mult):
-    pattern = r'mul\((\d{1,3}),(\d{1,3})\)'
+# Part 2
+def multiply2(s, multiplication):
     a = 0
     for i in range(4, len(s)):
+        # Turn on multiplication if do() occurs
         if s[i-4:i] == 'do()':
-            mult = True
+            multiplication = True
+        # Turn off multiplication if don't() occurs
         elif i > 7 and s[i-7:i] == '''don't()''':
-            mult = False
-        elif mult and s[i-4:i] == 'mul(':
+            multiplication = False
+        # Multiply if multiplication is on and mul(x,y) occurs
+        elif multiplication and s[i-4:i] == 'mul(':
+            # Extend string by 9 chars or to end of line
             ext = 9 if i + 9 < len(s) else len(s) - i
             st = s[i-4:i+ext]
-            match = re.search(pattern, st)
-            if match:
-                x = int(match.group(1))
-                y = int(match.group(2))
-                a += (x * y)
-    return a, mult
+            # Search for a match in the abbreviated string
+            a += multiply(st)
+    return a, multiplication
 
 
 ans = 0
-data = '''xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))'''
-ans = multiply3(data)
-print(ans)
-
-ans = 0
+data = ld.load_data(f'example{day}b.txt')
 data = ld.load_data(f'input{day}.txt')
-mult = True
+multiplication = True
 for line in data:
-    a, mult = multiply3(line, mult)
+    a, multiplication = multiply2(line, multiplication)
     ans += a
 print(ans)
