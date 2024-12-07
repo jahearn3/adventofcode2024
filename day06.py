@@ -1,4 +1,4 @@
-# Day 6:
+# Day 6: Guard Gallivant
 
 import copy
 import load_data as ld
