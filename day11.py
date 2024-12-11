@@ -2,7 +2,6 @@
 
 import load_data as ld
 import os
-import time
 
 f = os.path.basename(__file__)
 day = f[3:5]
@@ -14,8 +13,7 @@ numbers = [int(num) for num in numbers]
 prev_numbers = numbers
 next_numbers = []
 ans = 0
-for i in range(75):
-    start = time.time()
+for i in range(25):
     for n in prev_numbers:
         if n == 0:
             next_numbers.append(1)
@@ -27,8 +25,10 @@ for i in range(75):
             next_numbers.append(n * 2024)
     prev_numbers = next_numbers
     next_numbers = []
-    stop = time.time()
-    print(i+1, len(prev_numbers), stop-start)
+    print(i+1, len(prev_numbers))
 ans = len(prev_numbers)
 
 print(ans)
+
+# Part 2
+# for i in range(75):
