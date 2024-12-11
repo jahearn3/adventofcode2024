@@ -96,8 +96,8 @@ for i, line in enumerate(data):
                         neighbors.append((x+1, y, alt+1))
                     # print('neighbors:', neighbors)
                     for neighbor in neighbors:
+                        graph[node].append(neighbor)
                         if neighbor not in visited:
-                            graph[node].append(neighbor)
                             queue.append(neighbor)
             for item in visited:
                 x, y, alt = item
@@ -105,9 +105,9 @@ for i, line in enumerate(data):
                 if alt == 9:
                     # If a trail ends with a 9, find the rating
                     visited_path = set()
-                    rating = count_paths(graph, start, item, visited_path)
-            # print('score:', score)
+                    rating += count_paths(graph, start, item, visited_path)
             ans += rating
+            print(start, rating)
 
 print(ans)
 # 196 too low
