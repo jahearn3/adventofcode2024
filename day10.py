@@ -8,7 +8,7 @@ f = os.path.basename(__file__)
 day = f[3:5]
 
 data = ld.load_data(f'example{day}.txt')
-# data = ld.load_data(f'input{day}.txt')
+data = ld.load_data(f'input{day}.txt')
 
 ans = 0
 
@@ -17,7 +17,6 @@ for i, line in enumerate(data):
         if char == '0':
             # Breadth-first search algorithm
             start = (j, i, int(char))
-            # print('start:', start)
             visited = []
             queue = deque([start])
             score = 0
@@ -36,17 +35,14 @@ for i, line in enumerate(data):
                         neighbors.append((x-1, y, alt+1))
                     if x < len(data) - 1 and int(data[y][x+1]) == alt + 1:
                         neighbors.append((x+1, y, alt+1))
-                    # print('neighbors:', neighbors)
                     for neighbor in neighbors:
                         if neighbor not in visited:
                             queue.append(neighbor)
             for item in visited:
                 x, y, alt = item
-                # print('visited:', item)
                 if alt == 9:
                     # If a trail ends with a 9, add 1 to the score
                     score += 1
-            # print('score:', score)
             ans += score
 
 print(ans)
@@ -73,14 +69,14 @@ for i, line in enumerate(data):
         if char == '0':
             # Breadth-first search algorithm
             start = (j, i, int(char))
-            # print('start:', start)
             visited = []
             queue = deque([start])
             rating = 0
             graph = {}
             while queue:
                 node = queue.popleft()
-                graph[node] = []
+                if node not in graph:
+                    graph[node] = []
                 x, y, alt = node
                 if node not in visited:
                     visited.append(node)
@@ -94,20 +90,15 @@ for i, line in enumerate(data):
                         neighbors.append((x-1, y, alt+1))
                     if x < len(data) - 1 and int(data[y][x+1]) == alt + 1:
                         neighbors.append((x+1, y, alt+1))
-                    # print('neighbors:', neighbors)
                     for neighbor in neighbors:
                         graph[node].append(neighbor)
                         if neighbor not in visited:
                             queue.append(neighbor)
             for item in visited:
                 x, y, alt = item
-                # print('visited:', item)
                 if alt == 9:
                     # If a trail ends with a 9, find the rating
-                    visited_path = set()
-                    rating += count_paths(graph, start, item, visited_path)
+                    rating += count_paths(graph, start, item, set())
             ans += rating
-            print(start, rating)
 
 print(ans)
-# 196 too low
