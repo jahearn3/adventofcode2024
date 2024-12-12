@@ -31,4 +31,37 @@ ans = len(prev_numbers)
 print(ans)
 
 # Part 2
-# for i in range(75):
+cache = {0: [1]}
+
+
+def blink_even(n):
+    return int(str(n)[:len(str(n))//2]), int(str(n)[len(str(n))//2:])
+
+
+def blink_odd(n):
+    return n * 2024
+
+
+prev_numbers = numbers
+next_numbers = []
+for i in range(25):
+    for n in prev_numbers:
+        if n in cache:
+            v = cache[n]
+            for vv in v:
+                next_numbers.append(vv)
+        elif len(str(n)) % 2 == 0:
+            v = blink_even(n)
+            cache[n] = [v]
+            for vv in v:
+                next_numbers.append(vv)
+        else:
+            v = blink_odd(n)
+            cache[n] = [v]
+            next_numbers.append(v)
+    prev_numbers = next_numbers
+    next_numbers = []
+    print(i+1, len(prev_numbers))
+ans = len(prev_numbers)
+
+print(ans)
