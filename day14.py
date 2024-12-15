@@ -61,7 +61,7 @@ print(ans)
 
 
 # Part 2
-
+min_safety_factor = ans
 prev_robots = robots
 seconds = 10
 t = 0
@@ -74,11 +74,26 @@ while True:
         x = (x + vx) % grid_x
         y = (y + vy) % grid_y
         next_robots.append((x, y, vx, vy))
-    if (t % 20) == 0:
+    q1, q2, q3, q4 = 0, 0, 0, 0
+    for r in next_robots:
+        x, y, vx, vy = r
+        if x < half_x and y < half_y:
+            q1 += 1
+        elif x > half_x and y < half_y:
+            q2 += 1
+        elif x < half_x and y > half_y:
+            q3 += 1
+        elif x > half_x and y > half_y:
+            q4 += 1
+    safety_factor = q1 * q2 * q3 * q4
+    if safety_factor < min_safety_factor:
+        min_safety_factor = safety_factor
+        print(f'New min safety factor {safety_factor} after {t} seconds')
+    if (t % 500) == 0:
         print(f'{t} seconds have elapsed.')
-    # Already looked at first 400 seconds
+    # Already looked at first 1814 seconds
     # and 7000 < t < 7200
-    if t > 400:
+    if t > 6240 and safety_factor / min_safety_factor < 1.1:
         for i in range(grid_y):
             row = ''
             for j in range(grid_x):
@@ -91,7 +106,7 @@ while True:
                     row += '.'
                 else:
                     row += '#'
-            if ('######') in row:
+            if not anomaly and ('#' * 9) in row:
                 anomaly = True
                 print(f'After {t} seconds')
             if anomaly:
