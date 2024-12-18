@@ -2,14 +2,15 @@
 
 import load_data as ld
 import os
+from collections import deque
 
 f = os.path.basename(__file__)
 day = f[3:5]
 
 data = ld.load_data(f'example{day}a.txt')
-# data = ld.load_data(f'example{day}b.txt')
-# data = ld.load_data(f'example{day}.txt')
-# data = ld.load_data(f'input{day}.txt')
+data = ld.load_data(f'example{day}b.txt')
+data = ld.load_data(f'example{day}.txt')
+data = ld.load_data(f'input{day}.txt')
 
 
 def calculate_perimeters_and_areas(grid):
@@ -103,93 +104,57 @@ for k, v in regions.items():
 print(ans)
 
 # Part 2
+# Solution from HyperNeutrino
+regions = []
+
+# Get the dimensions of the grid
+rows = len(data)
+cols = len(data[0])
+
+# To track visited cells
+seen = set()
+
+for r in range(rows):
+    for c in range(cols):
+        if (r, c) in seen:
+            continue
+        seen.add((r, c))
+        region = {(r, c)}
+        q = deque([(r, c)])
+        crop = data[r][c]
+        while q:
+            cr, cc = q.popleft()
+            for nr, nc in [(cr - 1, cc), (cr + 1, cc), (cr, cc - 1), (cr, cc + 1)]:
+                if nr < 0 or nc < 0 or nr >= rows or nc >= cols:
+                    continue
+                if data[nr][nc] != crop:
+                    continue
+                if (nr, nc) in region:
+                    continue
+                region.add((nr, nc))
+                q.append((nr, nc))
+        seen |= region  # updates the seen set
+        regions.append(region)
 
 
-def calculate_sides_and_areas(grid):
-    # Create a dictionary to store perimeters and areas
-    regions = {}
-
-    # Get the dimensions of the grid
-    rows = len(grid)
-    cols = len(grid[0]) if rows > 0 else 0
-
-    # To track visited cells
-    visited = set()
-
-    # Directions for neighboring cells (left, right, up, down)
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
-    def is_valid(r, c):
-        return 0 <= r < rows and 0 <= c < cols
-
-    # Function to calculate perimeter and area for a region using DFS
-    def calc_region_properties(start_r, start_c):
-        plant_type = grid[start_r][start_c]
-        stack = [(start_r, start_c)]
-        region_sides = 0
-        region_area = 0
-
-        while stack:
-            r, c = stack.pop()
-
-            # If this cell has already been visited, skip it
-            if (r, c) in visited:
-                continue
-
-            # Mark the cell as visited
-            visited.add((r, c))
-            region_area += 1  # Each cell contributes to the area
-
-            # Check all four directions
-            for dr, dc in directions:
-                nr, nc = r + dr, c + dc
-
-                # If the neighbor is valid
-                if is_valid(nr, nc):
-                    if grid[nr][nc] == plant_type:
-                        # Add connected cell for further exploration
-                        stack.append((nr, nc))
-                    else:
-                        # Neighbor is a different plant type, count this side
-                        region_sides += 1
-                else:
-                    # Out of bounds counts as a side
-                    region_sides += 1
-
-            # After checking all directions, we count this cell's own sides
-            region_sides += 4
-
-        # Since we counted each edge twice, we need to adjust the total sides
-        # because each side shared between two cells was counted for each cell.
-        return region_sides // 2, region_area
-
-    # Iterate through each cell in the grid
-    for r in range(rows):
-        for c in range(cols):
-            if (r, c) not in visited:
-                plant_type = grid[r][c]
-                # Calculate the perimeter and area for this region
-                region_sides, region_area = calc_region_properties(r, c)
-
-                # Initialize the list if not already in the dictionary
-                if plant_type not in regions:
-                    regions[plant_type] = []
-
-                # Append (perimeter, area) to the list for the plant type
-                regions[plant_type].append((region_sides, region_area))
-
-    return regions
+def sides(region):
+    # Number of sides is the numbers of corners
+    corner_candidates = set()
+    for r, c in region:
+        for cr, cc in [(r - 0.5, c - 0.5), (r + 0.5, c - 0.5), (r + 0.5, c + 0.5), (r - 0.5, c + 0.5)]:
+            corner_candidates.add((cr, cc))
+    corners = 0
+    for cr, cc in corner_candidates:
+        config = [(sr, sc) in region for sr, sc in [(cr - 0.5, cc - 0.5), (cr + 0.5, cc - 0.5), (cr + 0.5, cc + 0.5), (cr - 0.5, cc + 0.5)]]
+        number = sum(config)
+        if number == 1:
+            corners += 1
+        elif number == 2:
+            if config == [True, False, True, False] or config == [False, True, False, True]:
+                corners += 2
+        elif number == 3:
+            corners += 1
+    return corners
 
 
-regions = calculate_sides_and_areas(data)
-
-ans = 0
-
-for k, v in regions.items():
-    print(k, v)
-    for r in v:
-        sides, area = r
-        ans += sides * area
-
-print(ans)
-# 5055692 too high
+print(sum(len(region) * sides(region) for region in regions))

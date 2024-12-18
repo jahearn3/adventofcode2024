@@ -143,7 +143,7 @@ program = [int(i) for i in data[4].split(':')[1].split(',')]
 ptr = 0
 output = []
 print('Program:', program)
-a = 6130000
+a = 100000000000000
 record_length = 1
 while True:
     registers['A'] = a
@@ -158,3 +158,5 @@ while True:
 
 print(a)
 # 317476438 [2, 4, 1, 6, 7, 5, 4, 6, 1, 0]
+# 100000000000000 15-digit number
+# 100000041029206 [2, 4, 1, 6, 7, 5, 4, 6, 1, 6]
