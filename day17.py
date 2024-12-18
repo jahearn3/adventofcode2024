@@ -139,6 +139,7 @@ registers['B'] = int(data[1].split(':')[1])
 registers['C'] = int(data[2].split(':')[1])
 program = [int(i) for i in data[4].split(':')[1].split(',')]
 # program = [0, 3, 5, 4, 3, 0]
+# Program: [2, 4, 1, 6, 7, 5, 4, 6, 1, 4, 5, 5, 0, 3, 3, 0]
 ptr = 0
 output = []
 print('Program:', program)
@@ -156,3 +157,4 @@ while True:
         a += 1
 
 print(a)
+# 317476438 [2, 4, 1, 6, 7, 5, 4, 6, 1, 0]
