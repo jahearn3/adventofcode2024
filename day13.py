@@ -59,3 +59,22 @@ for prize in prizes:
         ans += min_cost
 
 print(ans)
+
+# Part 2
+dx = 10000000000000
+dy = 10000000000000
+
+ans = 0
+
+for prize in prizes:
+    # Two equations and two unknowns
+    prize['loc'] = (prize['loc'][0] + dx, prize['loc'][1] + dy)
+    numerator = prize['loc'][0] * prize['B'][1] - prize['loc'][1] * prize['B'][0]
+    denominator = prize['A'][0] * prize['B'][1] - prize['A'][1] * prize['B'][0]
+    a = numerator / denominator
+    b = (prize['loc'][0] - prize['A'][0] * a) / prize['B'][0]
+    if a == int(a) and b == int(b):
+        cost = int(3 * a + b)
+        ans += cost
+
+print(ans)
